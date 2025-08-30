@@ -51,6 +51,10 @@ export default function RootLayout({ children }) {
           }
 
           *{box-sizing:border-box}
+
+          /* === กันเลื่อนแนวนอนทุกกรณี === */
+          html, body { max-width: 100%; overflow-x: hidden; }
+
           body{
             margin:0; color:var(--text); background:var(--bg);
             background-image:
@@ -59,6 +63,7 @@ export default function RootLayout({ children }) {
               radial-gradient(700px 500px at 40% 120%, rgba(255,241,184,.35), transparent 60%);
             font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", Arial;
           }
+
           header{
             position:sticky; top:0; z-index:20;
             backdrop-filter:saturate(160%) blur(10px);
@@ -99,10 +104,20 @@ export default function RootLayout({ children }) {
             background:linear-gradient(135deg,#f8fafc,#ffffff); }
           :root[data-theme="dark"] .chip{ background:linear-gradient(135deg,#101a33,#0c1326); }
 
-          /* ===== Mobile forecast: เลื่อนลงอย่างเดียว ===== */
+          /* === กริดหลักของหน้า: เดสก์ท็อปสองคอลัมน์ / มือถือคอลัมน์เดียว === */
+          .page-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr; /* desktop: sidebar + content */
+            gap: 20px;
+          }
+          @media (max-width: 900px) {
+            .page-grid { grid-template-columns: 1fr; } /* มือถือ/แท็บเล็ต: คอลัมน์เดียว */
+          }
+
+          /* ===== Mobile forecast: เลื่อนลงอย่างเดียว (ขยายเป็น ≤900px) ===== */
           .hour-cards { display:none; }
-          @media (max-width: 740px) {
-            .hour-table { display:none; }    /* ซ่อนตารางบนมือถือ */
+          @media (max-width: 900px) {
+            .hour-table { display:none; }    /* ซ่อนตารางบนจอเล็ก */
             .hour-cards { display:grid; gap:10px; }  /* โชว์เป็นการ์ดแทน */
             .hour-card {
               display:grid; grid-template-columns: 1fr 1fr; gap:8px;
