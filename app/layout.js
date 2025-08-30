@@ -1,3 +1,5 @@
+import ThemeToggle from "./ThemeToggle";
+
 export const metadata = {
   title: "Weather Now — Pastel Modern",
   description: "Pastel weather dashboard using Open-Meteo (no API key).",
@@ -8,7 +10,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="color-scheme" content="light" />   {/* บังคับสว่าง */}
+        {/* บอกเบราว์เซอร์ว่าเว็บรองรับ light/dark */}
+        <meta name="color-scheme" content="light dark" />
+        {/* favicon แบบพาสเทล */}
         <link
           rel="icon"
           href={
@@ -33,6 +37,7 @@ export default function RootLayout({ children }) {
           }
         />
         <style>{`
+          /* ===== Theme variables (default: light) ===== */
           :root{
             --bg:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e5e7eb;
             --card:#ffffff; --btn:#ffffff;
@@ -40,6 +45,11 @@ export default function RootLayout({ children }) {
             --shadow:0 10px 30px rgba(2,6,23,.08);
             --radius:22px;
           }
+          :root[data-theme="dark"]{
+            --bg:#0b1020; --text:#e5e7eb; --muted:#9aa3b2; --border:#1e2a44;
+            --card:#0f172a; --btn:#0c1326; --shadow:0 14px 38px rgba(0,0,0,.45);
+          }
+
           *{box-sizing:border-box}
           body{
             margin:0; color:var(--text); background:var(--bg);
@@ -54,19 +64,25 @@ export default function RootLayout({ children }) {
             backdrop-filter:saturate(160%) blur(10px);
             background:rgba(255,255,255,.7); border-bottom:1px solid var(--border);
           }
+          :root[data-theme="dark"] header{ background:rgba(11,16,32,.55); }
+
           main{ max-width:1180px; margin:0 auto; padding:24px; }
           .brand{display:flex; align-items:center; gap:12px; font-weight:900; letter-spacing:.3px}
           .logo{ width:32px; height:32px; border-radius:12px;
             background:linear-gradient(135deg,var(--p1),var(--p3)); box-shadow:var(--shadow) }
+          .muted{ color:var(--muted); }
+
           .card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
             box-shadow:var(--shadow); padding:18px; transition:transform .15s, box-shadow .15s, border-color .15s; }
           .card:hover{ transform:translateY(-2px); border-color:#dbeafe; box-shadow:0 18px 44px rgba(99,102,241,.18); }
-          .muted{ color:var(--muted); }
           .row{ display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
           input,select{
             width:100%; padding:12px 14px; border-radius:16px; border:1px solid var(--border);
             background:#fff; color:var(--text); outline:none;
             transition:border-color .15s, box-shadow .15s; appearance:none;
+          }
+          :root[data-theme="dark"] input, :root[data-theme="dark"] select{
+            background:#0c1326; color:var(--text); border-color:#2a3558;
           }
           input:focus,select:focus{ border-color:#a5b4fc; box-shadow:0 0 0 6px rgba(165,180,252,.25); }
           .btn{
@@ -75,23 +91,43 @@ export default function RootLayout({ children }) {
             transition:transform .1s, box-shadow .15s, border-color .15s;
           }
           .btn:hover{ transform:translateY(-1px); border-color:#d1d5db; box-shadow:var(--shadow); }
+
           table{ width:100%; border-collapse:collapse; }
           th,td{ padding:11px 12px; border-bottom:1px dashed var(--border); text-align:left; font-size:14px; }
+
           .chip{ padding:6px 12px; border-radius:999px; border:1px solid var(--border);
             background:linear-gradient(135deg,#f8fafc,#ffffff); }
-          footer{ color:var(--muted); font-size:12px; }
+          :root[data-theme="dark"] .chip{ background:linear-gradient(135deg,#101a33,#0c1326); }
+
+          /* ===== Mobile forecast: เลื่อนลงอย่างเดียว ===== */
+          .hour-cards { display:none; }
+          @media (max-width: 740px) {
+            .hour-table { display:none; }    /* ซ่อนตารางบนมือถือ */
+            .hour-cards { display:grid; gap:10px; }  /* โชว์เป็นการ์ดแทน */
+            .hour-card {
+              display:grid; grid-template-columns: 1fr 1fr; gap:8px;
+              padding:12px; border:1px solid var(--border); border-radius:16px; background:var(--card); box-shadow:var(--shadow);
+            }
+            .hour-card .label { color:var(--muted); font-size:12px; }
+            .hour-card .value { font-weight:700; }
+          }
         `}</style>
       </head>
       <body>
         <header>
           <main style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
             <div className="brand"><div className="logo"/><div style={{fontSize:20}}>Weather Now</div></div>
-            <div className="muted" style={{fontSize:13}}>Open-Meteo • Next.js on Vercel</div>
+            <div style={{display:'flex',gap:10,alignItems:'center'}}>
+              <span className="muted" style={{fontSize:13}}>Open-Meteo • Next.js on Vercel</span>
+              <ThemeToggle />
+            </div>
           </main>
         </header>
+
         <main>{children}</main>
+
         <footer style={{maxWidth:1180, margin:'28px auto', padding:'0 24px'}}>
-          Data: Open-Meteo (no API key). Design: pastel light only.
+          Data: Open-Meteo (no API key). Design: pastel + theme toggle.
         </footer>
       </body>
     </html>
