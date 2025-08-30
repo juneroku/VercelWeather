@@ -10,9 +10,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* บอกเบราว์เซอร์ว่าเว็บรองรับ light/dark */}
         <meta name="color-scheme" content="light dark" />
-        {/* favicon แบบพาสเทล */}
         <link
           rel="icon"
           href={
@@ -37,7 +35,6 @@ export default function RootLayout({ children }) {
           }
         />
         <style>{`
-          /* ===== Theme variables (default: light) ===== */
           :root{
             --bg:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e5e7eb;
             --card:#ffffff; --btn:#ffffff;
@@ -51,9 +48,7 @@ export default function RootLayout({ children }) {
           }
 
           *{box-sizing:border-box}
-
-          /* === กันเลื่อนแนวนอนทุกกรณี === */
-          html, body { max-width: 100%; overflow-x: hidden; }
+          html, body { max-width: 100%; overflow-x: hidden; } /* กันเลื่อนข้าง */
 
           body{
             margin:0; color:var(--text); background:var(--bg);
@@ -63,7 +58,6 @@ export default function RootLayout({ children }) {
               radial-gradient(700px 500px at 40% 120%, rgba(255,241,184,.35), transparent 60%);
             font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", Arial;
           }
-
           header{
             position:sticky; top:0; z-index:20;
             backdrop-filter:saturate(160%) blur(10px);
@@ -81,6 +75,7 @@ export default function RootLayout({ children }) {
             box-shadow:var(--shadow); padding:18px; transition:transform .15s, box-shadow .15s, border-color .15s; }
           .card:hover{ transform:translateY(-2px); border-color:#dbeafe; box-shadow:0 18px 44px rgba(99,102,241,.18); }
           .row{ display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+
           input,select{
             width:100%; padding:12px 14px; border-radius:16px; border:1px solid var(--border);
             background:#fff; color:var(--text); outline:none;
@@ -90,6 +85,7 @@ export default function RootLayout({ children }) {
             background:#0c1326; color:var(--text); border-color:#2a3558;
           }
           input:focus,select:focus{ border-color:#a5b4fc; box-shadow:0 0 0 6px rgba(165,180,252,.25); }
+
           .btn{
             display:inline-flex; align-items:center; gap:8px; padding:12px 14px; border-radius:16px;
             border:1px solid var(--border); background:var(--btn); cursor:pointer;
@@ -104,24 +100,28 @@ export default function RootLayout({ children }) {
             background:linear-gradient(135deg,#f8fafc,#ffffff); }
           :root[data-theme="dark"] .chip{ background:linear-gradient(135deg,#101a33,#0c1326); }
 
-          /* === กริดหลักของหน้า: เดสก์ท็อปสองคอลัมน์ / มือถือคอลัมน์เดียว === */
+          /* ===== กริดหลักของหน้า ===== */
           .page-grid {
             display: grid;
             grid-template-columns: 340px 1fr; /* desktop: sidebar + content */
             gap: 20px;
           }
-          @media (max-width: 900px) {
-            .page-grid { grid-template-columns: 1fr; } /* มือถือ/แท็บเล็ต: คอลัมน์เดียว */
+          .content-col { display:grid; grid-template-columns:1fr; gap:20px; } /* เนื้อหาคอลัมน์ขวา */
+
+          /* มือถือ/แท็บเล็ต: คอลัมน์เดียว */
+          @media (max-width: 1024px) {
+            .page-grid { grid-template-columns: 1fr; }
           }
 
-          /* ===== Mobile forecast: เลื่อนลงอย่างเดียว (ขยายเป็น ≤900px) ===== */
+          /* ===== Forecast: มือถือเป็นการ์ดแนวตั้ง (ไม่ต้องเลื่อนข้าง) ===== */
           .hour-cards { display:none; }
-          @media (max-width: 900px) {
-            .hour-table { display:none; }    /* ซ่อนตารางบนจอเล็ก */
-            .hour-cards { display:grid; gap:10px; }  /* โชว์เป็นการ์ดแทน */
+          @media (max-width: 1024px) {
+            .hour-table { display:none; }        /* ซ่อนตารางบนจอเล็ก */
+            .hour-cards { display:grid; gap:10px; }
             .hour-card {
               display:grid; grid-template-columns: 1fr 1fr; gap:8px;
-              padding:12px; border:1px solid var(--border); border-radius:16px; background:var(--card); box-shadow:var(--shadow);
+              padding:12px; border:1px solid var(--border); border-radius:16px;
+              background:var(--card); box-shadow:var(--shadow);
             }
             .hour-card .label { color:var(--muted); font-size:12px; }
             .hour-card .value { font-weight:700; }
