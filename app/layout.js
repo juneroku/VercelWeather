@@ -8,7 +8,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* Pastel sun+cloud favicon */}
+        <meta name="color-scheme" content="light" />   {/* บังคับสว่าง */}
         <link
           rel="icon"
           href={
@@ -40,12 +40,6 @@ export default function RootLayout({ children }) {
             --shadow:0 10px 30px rgba(2,6,23,.08);
             --radius:22px;
           }
-          @media (prefers-color-scheme:dark){
-            :root{
-              --bg:#0b1020; --text:#e5e7eb; --muted:#9aa3b2; --border:#1e2a44;
-              --card:#0f172a; --btn:#0c1326; --shadow:0 14px 38px rgba(0,0,0,.45);
-            }
-          }
           *{box-sizing:border-box}
           body{
             margin:0; color:var(--text); background:var(--bg);
@@ -58,9 +52,8 @@ export default function RootLayout({ children }) {
           header{
             position:sticky; top:0; z-index:20;
             backdrop-filter:saturate(160%) blur(10px);
-            background:rgba(255,255,255,.6); border-bottom:1px solid var(--border);
+            background:rgba(255,255,255,.7); border-bottom:1px solid var(--border);
           }
-          @media (prefers-color-scheme:dark){ header{ background:rgba(11,16,32,.55); } }
           main{ max-width:1180px; margin:0 auto; padding:24px; }
           .brand{display:flex; align-items:center; gap:12px; font-weight:900; letter-spacing:.3px}
           .logo{ width:32px; height:32px; border-radius:12px;
@@ -96,11 +89,9 @@ export default function RootLayout({ children }) {
             <div className="muted" style={{fontSize:13}}>Open-Meteo • Next.js on Vercel</div>
           </main>
         </header>
-
         <main>{children}</main>
-
         <footer style={{maxWidth:1180, margin:'28px auto', padding:'0 24px'}}>
-          Data: Open-Meteo (no API key). Design: rounded pastel.
+          Data: Open-Meteo (no API key). Design: pastel light only.
         </footer>
       </body>
     </html>
