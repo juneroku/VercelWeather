@@ -1,8 +1,8 @@
 import ThemeToggle from "./ThemeToggle";
 
 export const metadata = {
-  title: "Weather Now — Pastel Modern",
-  description: "Pastel weather dashboard using Open-Meteo (no API key).",
+  title: "Weather Now — Blue",
+  description: "Blue, playful weather dashboard using Open-Meteo.",
 };
 
 export default function RootLayout({ children }) {
@@ -19,12 +19,12 @@ export default function RootLayout({ children }) {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
               <defs>
                 <linearGradient id="sun" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#ffd1dc"/>
-                  <stop offset="1" stop-color="#fff1b8"/>
+                  <stop offset="0" stop-color="#ffe08a"/>
+                  <stop offset="1" stop-color="#ffd1d1"/>
                 </linearGradient>
                 <linearGradient id="cloud" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#d7f2ff"/>
-                  <stop offset="1" stop-color="#ece9ff"/>
+                  <stop offset="0" stop-color="#cfe9ff"/>
+                  <stop offset="1" stop-color="#e9f1ff"/>
                 </linearGradient>
               </defs>
               <rect width="128" height="128" rx="28" fill="#fff"/>
@@ -36,96 +36,99 @@ export default function RootLayout({ children }) {
         />
         <style>{`
           :root{
-            --bg:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e5e7eb;
-            --card:#ffffff; --btn:#ffffff;
-            --p1:#ffd1dc; --p2:#c7f0ff; --p3:#fff1b8; --p4:#e9d5ff; --p5:#d1fae5;
-            --shadow:0 10px 30px rgba(2,6,23,.08);
+            /* Light: blue & airy */
+            --bg:#f7fbff;
+            --text:#0b2545;
+            --muted:#5b708b;
+            --border:#dbe7ff;
+            --card:#ffffff;
+            --btn:#ffffff;
+            --shadow:0 12px 36px rgba(9,30,66,.08);
             --radius:22px;
+
+            --blue1:#e6f2ff; --blue2:#d4eeff; --blue3:#c3e6ff; --accent:#7cc4ff;
           }
           :root[data-theme="dark"]{
-            --bg:#0b1020; --text:#e5e7eb; --muted:#9aa3b2; --border:#1e2a44;
-            --card:#0f172a; --btn:#0c1326; --shadow:0 14px 38px rgba(0,0,0,.45);
+            /* Dark: rainy navy */
+            --bg:#0b132b;
+            --text:#eaf2ff;
+            --muted:#9fb4d1;
+            --border:#1d2b4a;
+            --card:#0f1a34;
+            --btn:#0d1830;
+            --shadow:0 16px 44px rgba(0,0,0,.45);
+
+            --blue1:#0f203d; --blue2:#0c1a33; --blue3:#0b162c; --accent:#5db1ff;
           }
 
           *{box-sizing:border-box}
-          html, body { max-width: 100%; overflow-x: hidden; } /* กันเลื่อนข้าง */
-
+          html,body{max-width:100%;overflow-x:hidden}
           body{
             margin:0; color:var(--text); background:var(--bg);
             background-image:
-              radial-gradient(900px 600px at -10% -10%, rgba(199,240,255,.5), transparent 60%),
-              radial-gradient(1100px 700px at 110% 0%, rgba(233,213,255,.45), transparent 60%),
-              radial-gradient(700px 500px at 40% 120%, rgba(255,241,184,.35), transparent 60%);
+              radial-gradient(1000px 650px at -10% -10%, var(--blue1), transparent 60%),
+              radial-gradient(1200px 750px at 110% 0%, var(--blue2), transparent 60%),
+              radial-gradient(800px 520px at 40% 120%, var(--blue3), transparent 60%);
             font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", Arial;
           }
+
           header{
             position:sticky; top:0; z-index:20;
             backdrop-filter:saturate(160%) blur(10px);
-            background:rgba(255,255,255,.7); border-bottom:1px solid var(--border);
+            background:color-mix(in srgb, var(--bg) 60%, #ffffff 40%);
+            border-bottom:1px solid var(--border);
           }
-          :root[data-theme="dark"] header{ background:rgba(11,16,32,.55); }
 
-          main{ max-width:1180px; margin:0 auto; padding:24px; }
-          .brand{display:flex; align-items:center; gap:12px; font-weight:900; letter-spacing:.3px}
-          .logo{ width:32px; height:32px; border-radius:12px;
-            background:linear-gradient(135deg,var(--p1),var(--p3)); box-shadow:var(--shadow) }
-          .muted{ color:var(--muted); }
+          main{max-width:1180px;margin:0 auto;padding:24px}
 
-          .card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-            box-shadow:var(--shadow); padding:18px; transition:transform .15s, box-shadow .15s, border-color .15s; }
-          .card:hover{ transform:translateY(-2px); border-color:#dbeafe; box-shadow:0 18px 44px rgba(99,102,241,.18); }
-          .row{ display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+          .brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.3px}
+          .logo{width:34px;height:34px;border-radius:14px;background:linear-gradient(135deg,#bfe3ff,#fff0d5);box-shadow:var(--shadow)}
 
+          .muted{color:var(--muted)}
+          .card{
+            background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+            box-shadow:var(--shadow); padding:18px;
+            transition:transform .15s, box-shadow .15s, border-color .15s;
+          }
+          .card:hover{ transform:translateY(-2px); border-color:#cfe1ff; box-shadow:0 18px 44px rgba(93,177,255,.18); }
+
+          .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
           input,select{
             width:100%; padding:12px 14px; border-radius:16px; border:1px solid var(--border);
-            background:#fff; color:var(--text); outline:none;
+            background:var(--card); color:var(--text); outline:none;
             transition:border-color .15s, box-shadow .15s; appearance:none;
           }
-          :root[data-theme="dark"] input, :root[data-theme="dark"] select{
-            background:#0c1326; color:var(--text); border-color:#2a3558;
-          }
-          input:focus,select:focus{ border-color:#a5b4fc; box-shadow:0 0 0 6px rgba(165,180,252,.25); }
-
+          input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 6px color-mix(in srgb, var(--accent) 25%, transparent)}
           .btn{
-            display:inline-flex; align-items:center; gap:8px; padding:12px 14px; border-radius:16px;
-            border:1px solid var(--border); background:var(--btn); cursor:pointer;
+            display:inline-flex;align-items:center;gap:8px;padding:12px 14px;border-radius:16px;
+            border:1px solid var(--border);background:var(--btn);cursor:pointer;
             transition:transform .1s, box-shadow .15s, border-color .15s;
           }
-          .btn:hover{ transform:translateY(-1px); border-color:#d1d5db; box-shadow:var(--shadow); }
+          .btn:hover{transform:translateY(-1px);border-color:#cfe1ff;box-shadow:var(--shadow)}
 
-          table{ width:100%; border-collapse:collapse; }
-          th,td{ padding:11px 12px; border-bottom:1px dashed var(--border); text-align:left; font-size:14px; }
+          /* page grid */
+          .page-grid{display:grid;grid-template-columns:340px 1fr;gap:20px}
+          .content-col{display:grid;grid-template-columns:1fr;gap:20px}
+          @media (max-width:1024px){.page-grid{grid-template-columns:1fr}}
 
-          .chip{ padding:6px 12px; border-radius:999px; border:1px solid var(--border);
-            background:linear-gradient(135deg,#f8fafc,#ffffff); }
-          :root[data-theme="dark"] .chip{ background:linear-gradient(135deg,#101a33,#0c1326); }
-
-          /* ===== กริดหลักของหน้า ===== */
-          .page-grid {
-            display: grid;
-            grid-template-columns: 340px 1fr; /* desktop: sidebar + content */
-            gap: 20px;
-          }
-          .content-col { display:grid; grid-template-columns:1fr; gap:20px; } /* เนื้อหาคอลัมน์ขวา */
-
-          /* มือถือ/แท็บเล็ต: คอลัมน์เดียว */
-          @media (max-width: 1024px) {
-            .page-grid { grid-template-columns: 1fr; }
-          }
-
-          /* ===== Forecast: มือถือเป็นการ์ดแนวตั้ง (ไม่ต้องเลื่อนข้าง) ===== */
-          .hour-cards { display:none; }
-          @media (max-width: 1024px) {
-            .hour-table { display:none; }        /* ซ่อนตารางบนจอเล็ก */
-            .hour-cards { display:grid; gap:10px; }
-            .hour-card {
-              display:grid; grid-template-columns: 1fr 1fr; gap:8px;
-              padding:12px; border:1px solid var(--border); border-radius:16px;
-              background:var(--card); box-shadow:var(--shadow);
+          /* Forecast on mobile: vertical cards */
+          .hour-cards{display:none}
+          @media (max-width:1024px){
+            .hour-table{display:none}
+            .hour-cards{display:grid;gap:12px}
+            .hour-card{
+              display:grid;grid-template-columns:1fr 1fr;gap:10px;
+              padding:12px;border:1px solid var(--border);border-radius:16px;background:var(--card);box-shadow:var(--shadow)
             }
-            .hour-card .label { color:var(--muted); font-size:12px; }
-            .hour-card .value { font-weight:700; }
+            .hour-card .label{color:var(--muted);font-size:12px}
+            .hour-card .value{font-weight:700}
           }
+
+          /* theme toggle for sun/rain in components */
+          .theme-sun{display:inline-block}
+          .theme-rain{display:none}
+          :root[data-theme="dark"] .theme-sun{display:none}
+          :root[data-theme="dark"] .theme-rain{display:inline-block}
         `}</style>
       </head>
       <body>
@@ -141,8 +144,8 @@ export default function RootLayout({ children }) {
 
         <main>{children}</main>
 
-        <footer style={{maxWidth:1180, margin:'28px auto', padding:'0 24px'}}>
-          Data: Open-Meteo (no API key). Design: pastel + theme toggle.
+        <footer style={{maxWidth:1180,margin:'28px auto',padding:'0 24px'}} className="muted">
+          Data: Open-Meteo (no API key). Design: blue & playful.
         </footer>
       </body>
     </html>
