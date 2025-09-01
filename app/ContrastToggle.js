@@ -1,22 +1,22 @@
 'use client';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 const KEY = 'contrast-pref'; // 'normal' | 'hc'
 
 export default function ContrastToggle(){
-  const [mode,setMode] = useState('normal');
-  useEffect(()=>{
+  const [m, setM] = useState('normal');
+  useEffect(() => {
     const saved = localStorage.getItem(KEY);
-    const m = saved === 'hc' ? 'hc' : 'normal';
-    setMode(m);
+    const v = saved === 'hc' ? 'hc' : 'normal';
+    setM(v); document.documentElement.dataset.contrast = v;
+  }, []);
+  useEffect(() => {
     document.documentElement.dataset.contrast = m;
-  },[]);
-  useEffect(()=>{
-    document.documentElement.dataset.contrast = mode;
-    localStorage.setItem(KEY, mode);
-  },[mode]);
+    localStorage.setItem(KEY, m);
+  }, [m]);
+
   return (
-    <button className="btn" onClick={()=>setMode(m => m==='normal' ? 'hc' : 'normal')}>
-      {mode==='normal' ? '⬛ High Contrast' : '◻️ Normal Contrast'}
+    <button className="btn" onClick={() => setM(x=>x==='normal'?'hc':'normal')}>
+      {m==='normal' ? '⬛ High Contrast' : '◻️ Normal Contrast'}
     </button>
   );
 }

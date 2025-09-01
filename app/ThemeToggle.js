@@ -1,22 +1,22 @@
 'use client';
 import { useEffect, useState } from 'react';
-const KEY = 'theme-preference';
+const KEY = 'theme-pref';
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState('light');
+  const [t, setT] = useState('light');
   useEffect(() => {
     const saved = localStorage.getItem(KEY);
-    const t = saved === 'dark' ? 'dark' : 'light';
-    setTheme(t);
-    document.documentElement.dataset.theme = t;
+    const theme = saved === 'dark' ? 'dark' : 'light';
+    setT(theme); document.documentElement.dataset.theme = theme;
   }, []);
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem(KEY, theme);
-  }, [theme]);
+    document.documentElement.dataset.theme = t;
+    localStorage.setItem(KEY, t);
+  }, [t]);
+
   return (
-    <button className="btn" onClick={()=>setTheme(t=> t==='light' ? 'dark' : 'light')} title="Toggle theme">
-      {theme === 'light' ? '🌙 Dark mode' : '☀️ Light mode'}
+    <button className="btn" onClick={() => setT(x => x==='light'?'dark':'light')}>
+      {t==='light' ? '🌙 Dark' : '☀️ Light'}
     </button>
   );
 }
