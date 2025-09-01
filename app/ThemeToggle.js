@@ -1,22 +1,22 @@
 'use client';
-import { useEffect, useState } from 'react';
-const KEY = 'theme-preference';
+import {useEffect, useState} from 'react';
+const KEY = 'contrast-pref'; // 'normal' | 'hc'
 
-export default function ThemeToggle() {
-  const [theme, setTheme] = useState('light');
-  useEffect(() => {
+export default function ContrastToggle(){
+  const [mode,setMode] = useState('normal');
+  useEffect(()=>{
     const saved = localStorage.getItem(KEY);
-    const t = saved === 'dark' ? 'dark' : 'light';
-    setTheme(t);
-    document.documentElement.dataset.theme = t;
-  }, []);
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem(KEY, theme);
-  }, [theme]);
+    const m = saved === 'hc' ? 'hc' : 'normal';
+    setMode(m);
+    document.documentElement.dataset.contrast = m;
+  },[]);
+  useEffect(()=>{
+    document.documentElement.dataset.contrast = mode;
+    localStorage.setItem(KEY, mode);
+  },[mode]);
   return (
-    <button className="btn" onClick={()=>setTheme(t=> t==='light' ? 'dark' : 'light')} title="Toggle theme">
-      {theme === 'light' ? '🌙 Dark mode' : '☀️ Light mode'}
+    <button className="btn" onClick={()=>setMode(m => m==='normal' ? 'hc' : 'normal')}>
+      {mode==='normal' ? '⬛ High Contrast' : '◻️ Normal Contrast'}
     </button>
   );
 }
