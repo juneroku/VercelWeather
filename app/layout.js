@@ -30,6 +30,11 @@ export default function RootLayout({ children }) {
             --radius:24px;
 
             --blue1:#E6F0FF; --blue2:#D7EBFF; --blue3:#CFE6FF;
+
+            /* Sky tokens (light) */
+            --sky-top:#eaf6ff;
+            --sky-mid:#f3f9ff;
+            --sky-bottom:#ffffff;
           }
           :root[data-theme="dark"]{
             /* Dark */
@@ -46,6 +51,11 @@ export default function RootLayout({ children }) {
             --shadow:0 18px 48px rgba(0,0,0,.45);
 
             --blue1:#0F1B34; --blue2:#0C162B; --blue3:#0A1224;
+
+            /* Sky tokens (dark) */
+            --sky-top:#0b1220;
+            --sky-mid:#0e1628;
+            --sky-bottom:#0f172a;
           }
           /* High Contrast override (AA+/AAA leaning) */
           :root[data-contrast="hc"]{
@@ -60,14 +70,47 @@ export default function RootLayout({ children }) {
           *{box-sizing:border-box}
           html,body{max-width:100%;overflow-x:hidden}
           body{
-            margin:0; color:var(--text); background:var(--bg);
-            background-image:
-              radial-gradient(1000px 650px at -10% -10%, var(--blue1), transparent 60%),
-              radial-gradient(1200px 750px at 110% 0%, var(--blue2), transparent 60%),
-              radial-gradient(800px 520px at 40% 120%, var(--blue3), transparent 60%);
+            margin:0; color:var(--text);
+            /* พื้นหลังท้องฟ้า: ฟ้าพาสเทลเป็นชั้นๆ */
+            background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-bottom) 100%);
             font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", Arial;
             line-height:1.35;
           }
+
+          /* ====== ก้อนเมฆลอย 2 ชั้น (เบาๆ) ====== */
+          @keyframes drift { from { background-position: 0 0; } to { background-position: -1200px 0; } }
+          body::before,
+          body::after{
+            content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
+            background-repeat: repeat-x; background-size: 1200px auto; opacity:.85;
+          }
+          /* ชั้นล่าง (เมฆแนวขอบล่าง) */
+          body::before{
+            background-position: bottom left;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='220' viewBox='0 0 1200 220'%3E%3Cg fill='%23ffffff' opacity='0.95'%3E%3Cpath d='M0 170 C 80 140 160 140 240 170 C 290 130 370 130 430 170 C 500 150 560 150 620 170 C 690 145 760 145 820 170 C 900 140 980 140 1060 170 L1200 170 1200 220 0 220 Z'/%3E%3C/g%3E%3C/svg%3E");
+            animation: drift 80s linear infinite;
+          }
+          /* ชั้นบน (ก้อนเมฆเล็กๆ กระจาย) */
+          body::after{
+            background-position: 40px 40px;
+            background-size: 900px auto;
+            opacity:.65;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='180' viewBox='0 0 900 180'%3E%3Cg fill='%23ffffff' opacity='0.9'%3E%3Ccircle cx='90' cy='70' r='36'/%3E%3Ccircle cx='130' cy='62' r='50'/%3E%3Ccircle cx='185' cy='74' r='40'/%3E%3Ccircle cx='245' cy='60' r='55'/%3E%3Crect x='70' y='90' width='220' height='90' rx='22'/%3E%3Ccircle cx='420' cy='72' r='40'/%3E%3Ccircle cx='465' cy='60' r='54'/%3E%3Crect x='380' y='90' width='220' height='90' rx='22'/%3E%3Ccircle cx='720' cy='68' r='46'/%3E%3Ccircle cx='765' cy='58' r='56'/%3E%3Crect x='675' y='90' width='230' height='90' rx='22'/%3E%3C/g%3E%3C/svg%3E");
+            animation: drift 140s linear infinite reverse;
+          }
+          /* โหมดมืด: ทำเมฆทึมลงให้คอนทราสต์ดี */
+          :root[data-theme="dark"] body::before,
+          :root[data-theme="dark"] body::after{
+            filter: brightness(0.75) saturate(0.9);
+            opacity:.55;
+          }
+          /* High-Contrast: ปิดพื้นหลังเมฆเพื่อเน้นคอนเทนต์ */
+          :root[data-contrast="hc"] body::before,
+          :root[data-contrast="hc"] body::after{ display:none; }
+          @media (prefers-reduced-motion: reduce){
+            body::before, body::after{ animation:none }
+          }
+
           header{
             position:sticky; top:0; z-index:20;
             backdrop-filter:saturate(160%) blur(10px);
@@ -85,9 +128,7 @@ export default function RootLayout({ children }) {
           .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 
           /* Controls */
-          input,select,button{
-            font:inherit;
-          }
+          input,select,button{ font:inherit; }
           input,select{
             width:100%; padding:14px 16px; border-radius:16px; border:1px solid var(--border);
             background:var(--surface); color:var(--text); outline:none;
