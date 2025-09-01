@@ -37,46 +37,104 @@ function useCompact(bp=520){
   return c;
 }
 
-/* ===== Charts (SVG, responsive, with min/max labels) ===== */
-function LineChart({ xs, ys, height=180, id="line" }) {
+/* =====================  CHARTS (Drop-in replacement)  ===================== */
+
+/* เส้นโค้งเนียนสไตล์ภาพแรก + จุดเล็ก + เส้นประ + ป้าย min/max */
+function LineChart({ xs, ys, height = 180, id = "line" }) {
   if (!ys?.length) return <div className="muted">No data</div>;
-  const w=560,h=height,p=18;
-  const min=Math.min(...ys), max=Math.max(...ys);
-  const x=i=>p+(i/(ys.length-1))*(w-2*p);
-  const y=v=>p+(1-(v-min)/(max-min||1))*(h-2*p);
-  const d=ys.map((v,i)=>`${i?'L':'M'}${x(i)},${y(v)}`).join(' ');
+
+  const w = 560, h = height, p = 18;
+  const min = Math.min(...ys), max = Math.max(...ys);
+  const X = i => p + (i / (ys.length - 1)) * (w - 2 * p);
+  const Y = v => p + (1 - (v - min) / (max - min || 1)) * (h - 2 * p);
+
+  // Catmull-Rom -> Cubic Bézier (เส้นโค้งเนียน)
+  const pts = ys.map((v, i) => ({ x: X(i), y: Y(v) }));
+  const t = 0.5; // ความโค้ง (0..1)
+  const d = (() => {
+    if (pts.length < 2) return "";
+    const segs = [`M${pts[0].x},${pts[0].y}`];
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i];
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const p3 = pts[i + 2] || p2;
+      const cp1x = p1.x + ((p2.x - p0.x) / 6) * t;
+      const cp1y = p1.y + ((p2.y - p0.y) / 6) * t;
+      const cp2x = p2.x - ((p3.x - p1.x) / 6) * t;
+      const cp2y = p2.y - ((p3.y - p1.y) / 6) * t;
+      segs.push(`C${cp1x},${cp1y},${cp2x},${cp2y},${p2.x},${p2.y}`);
+    }
+    return segs.join(" ");
+  })();
+
   return (
     <svg role="img" aria-labelledby={`${id}-t ${id}-d`} viewBox={`0 0 ${w} ${h}`} width="100%" height={h}>
-      <title id={`${id}-t`}>Temperature next hours</title><desc id={`${id}-d`}>Line chart with grid</desc>
+      <title id={`${id}-t`}>Temperature next hours</title>
+      <desc id={`${id}-d`}>Smooth line chart with grid and min/max labels</desc>
+
       <rect x="0" y="0" width={w} height={h} rx="18" fill="var(--surface)" stroke="var(--border)"/>
-      {Array.from({length:5},(_,i)=>{const yy=p+i*(h-2*p)/4; return (
-        <line key={i} x1={p} y1={yy} x2={w-p} y2={yy} stroke="var(--chart-grid)" strokeDasharray="6 8"/>
-      );})}
-      <path d={d} fill="none" stroke="var(--chart-line)" strokeWidth="3"/>
-      {ys.map((v,i)=><circle key={i} cx={x(i)} cy={y(v)} r="4" fill="var(--chart-dot)" />)}
-      <text x={w-p} y={p-6} textAnchor="end" fontSize="12" fill="var(--muted)">max {max.toFixed(1)}°C</text>
-      <text x={w-p} y={h-6} textAnchor="end" fontSize="12" fill="var(--muted)">min {min.toFixed(1)}°C</text>
+
+      {/* grid เส้นประอ่อน */}
+      {Array.from({length:5},(_,i)=>{
+        const yy = p + i * (h - 2*p) / 4;
+        return <line key={i} x1={p} y1={yy} x2={w-p} y2={yy} stroke="var(--chart-grid)" strokeDasharray="6 8"/>;
+      })}
+
+      {/* เส้นโค้งเนียน + จุดเล็ก */}
+      <path d={d} fill="none" stroke="var(--chart-line)" strokeWidth="3" />
+      {ys.map((v,i)=> <circle key={i} cx={X(i)} cy={Y(v)} r="3" fill="var(--chart-dot)"/>)}
+
+      {/* ป้ายมุมขวา */}
+      <text x={w-p} y={p-6} textAnchor="end" fontSize="12" fill="var(--muted)">
+        max {max.toFixed(1)}°C
+      </text>
+      <text x={w-p} y={h-6} textAnchor="end" fontSize="12" fill="var(--muted)">
+        min {min.toFixed(1)}°C
+      </text>
     </svg>
   );
 }
-function BarChart({ xs, ys, height=140, id="bar" }) {
+
+/* แถบแท่งเรียบ ๆ โทนเดียว มีฉลาก max ด้านขวาบน (สไตล์ภาพแรก) */
+function BarChart({ xs, ys, height = 140, id = "bar" }) {
   if (!ys?.length) return <div className="muted">No data</div>;
-  const w=560,h=height,p=18; const ymax=Math.max(1,...ys);
-  const bw=(w-2*p)/ys.length - 6;
+
+  const w = 560, h = height, p = 18;
+  const ymax = Math.max(1, ...ys);
+  const bw = (w - 2*p) / ys.length - 6;
+
   return (
     <svg role="img" aria-labelledby={`${id}-t ${id}-d`} viewBox={`0 0 ${w} ${h}`} width="100%" height={h}>
-      <title id={`${id}-t`}>Precipitation next hours</title><desc id={`${id}-d`}>Bar chart</desc>
+      <title id={`${id}-t`}>Precipitation next hours</title>
+      <desc id={`${id}-d`}>Simple bar chart with max label</desc>
+
       <rect x="0" y="0" width={w} height={h} rx="18" fill="var(--surface)" stroke="var(--border)"/>
-      <text x={w-p} y={p-6} textAnchor="end" fontSize="12" fill="var(--muted)">max {ymax.toFixed(1)} mm</text>
+
+      <text x={w-p} y={p-6} textAnchor="end" fontSize="12" fill="var(--muted)">
+        max {ymax.toFixed(1)} mm
+      </text>
+
       {ys.map((v,i)=>{
-        const x=p+i*((w-2*p)/ys.length);
-        const hh=(v/ymax)*(h-2*p);
-        return <rect key={i} x={x} y={h-p-hh} width={bw} height={hh} rx="8"
-          fill="var(--chart-bar)" />;
+        const x = p + i * ((w - 2*p) / ys.length);
+        const hh = (v / ymax) * (h - 2*p);
+        return (
+          <rect
+            key={i}
+            x={x}
+            y={h - p - hh}
+            width={bw}
+            height={hh}
+            rx="10"
+            fill="var(--chart-bar)"
+          />
+        );
       })}
     </svg>
   );
 }
+/* ===================  END CHARTS (Drop-in replacement)  =================== */
+
 
 /* ===== Map helper ===== */
 const osm = (lat, lon, d=0.12) =>
