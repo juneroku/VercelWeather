@@ -1,4 +1,4 @@
-# Weather Now — Microservice on Vercel (no database)
+# Weather Now — Microservice on Vercel 
 
 A tiny **Next.js** app that exposes an `/api/weather` microservice which fetches **free** weather data from **Open‑Meteo** (no API key) and renders a public dashboard. Designed for easy deploy to **Vercel**.
 
